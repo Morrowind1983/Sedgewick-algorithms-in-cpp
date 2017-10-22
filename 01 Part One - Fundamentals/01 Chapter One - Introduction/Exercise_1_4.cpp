@@ -30,17 +30,18 @@ void quick_find(int ps[], int qs[], int m) {
 		q = qs[idx];
 		cout << p << "-" << q;
 		times += 2;
-		int t = id[p];
-		if (t == id[q]) {
+		int pID = id[p];
+		int qID = id[q];
+		if (pID == qID) {
 			cout << endl;
 			continue;
 		}
 		cout << " id array =";
 		for (i = 0; i < N; i++) {
 			times++;
-			if (id[i] == t) {
-				times += 2;
-				id[i] = id[q];
+			if (id[i] == pID) {
+				times++;
+				id[i] = qID;
 			}
 			cout << " " << id[i];
 		}
@@ -49,11 +50,11 @@ void quick_find(int ps[], int qs[], int m) {
 }
 
 /*
-0-2 id array = 2 1 2 3 4 5 6 7 8 9 accesses = 14
-1-4 id array = 2 4 2 3 4 5 6 7 8 9 accesses = 14
-2-5 id array = 5 4 5 3 4 5 6 7 8 9 accesses = 16
-3-6 id array = 5 4 5 6 4 5 6 7 8 9 accesses = 14
-0-4 id array = 4 4 4 6 4 4 6 7 8 9 accesses = 18
-6-0 id array = 4 4 4 4 4 4 4 7 8 9 accesses = 16
+0-2 id array = 2 1 2 3 4 5 6 7 8 9 accesses = 13
+1-4 id array = 2 4 2 3 4 5 6 7 8 9 accesses = 13
+2-5 id array = 5 4 5 3 4 5 6 7 8 9 accesses = 14
+3-6 id array = 5 4 5 6 4 5 6 7 8 9 accesses = 13
+0-4 id array = 4 4 4 6 4 4 6 7 8 9 accesses = 15
+6-0 id array = 4 4 4 4 4 4 4 7 8 9 accesses = 14
 1-3
 */
