@@ -1,6 +1,6 @@
 /*
-1.7 Do Exercise 1.4, but use the weighted quick-union algorithm (Program
-1.3).
+1.8 Do Exercise 1.4, but use the weighted quick-union algorithm with path
+compression by halving (Program 1.4).
 
 1.4 Show the contents of the id array after each union operation when you use
 the quick-find algorithm (Program 1.1) to solve the connectivity problem for
@@ -13,17 +13,17 @@ using namespace std;
 
 static const int N = 10;
 
-void weighted_quick_union(int ps[], int qs[], int m);
+void weighted_quick_union_with_path_compression(int ps[], int qs[], int m);
 
 int main() {
 	int ps[7] = {0, 1, 2, 3, 0, 6, 1};
 	int qs[7] = {2, 4, 5, 6, 4, 0, 3};
-	weighted_quick_union(ps, qs, 7);
+	weighted_quick_union_with_path_compression(ps, qs, 7);
 	
 	return 0;
 }
 
-void weighted_quick_union(int ps[], int qs[], int m) {
+void weighted_quick_union_with_path_compression(int ps[], int qs[], int m) {
 	int i, j, p, q, id[N], sz[N];
 	for (i = 0; i < N; i++) {
 		id[i] = i;
@@ -35,11 +35,15 @@ void weighted_quick_union(int ps[], int qs[], int m) {
 		q = qs[idx];
 		cout << p << "-" << q;
 		times++;
-		for (i = p; i != id[i]; i = id[i])
-			times += 2;
+		for (i = p; i != id[i]; i = id[i]) {
+			times += 5;
+			id[i] = id[id[i]];
+		}
 		times++;
-		for (j = q; j != id[j]; j = id[j])
-			times += 2;
+		for (j = q; j != id[j]; j = id[j]) {
+			times += 5;
+			id[j] = id[id[j]];
+		}
 		if (i == j) {
 			cout << " accesses = " << times << endl;
 			continue;
@@ -64,9 +68,9 @@ void weighted_quick_union(int ps[], int qs[], int m) {
 /*
 0-2 id array = 0 1 0 3 4 5 6 7 8 9 accesses = 3
 1-4 id array = 0 1 0 3 1 5 6 7 8 9 accesses = 3
-2-5 id array = 0 1 0 3 1 0 6 7 8 9 accesses = 5
+2-5 id array = 0 1 0 3 1 0 6 7 8 9 accesses = 8
 3-6 id array = 0 1 0 3 1 0 3 7 8 9 accesses = 3
-0-4 id array = 0 0 0 3 1 0 3 7 8 9 accesses = 5
-6-0 id array = 0 0 0 0 1 0 3 7 8 9 accesses = 5
-1-3 accesses = 6
+0-4 id array = 0 0 0 3 1 0 3 7 8 9 accesses = 8
+6-0 id array = 0 0 0 0 1 0 3 7 8 9 accesses = 8
+1-3 accesses = 12
 */

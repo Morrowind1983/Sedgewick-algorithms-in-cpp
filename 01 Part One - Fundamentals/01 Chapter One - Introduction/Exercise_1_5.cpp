@@ -1,9 +1,10 @@
 /*
 1.5 Do Exercise 1.4, but use the quick-union algorithm (Program 1.2).
-1.4 Show the contents of the id array after each union operation when you
-use the quick-find algorithm (Program 1.1) to solve the connectivity problem
-for the sequence 0-2, 1-4, 2-5, 3-6, 0-4, 6-0, and 1-3. Also give the number
-of times the program accesses the id array for each input pair.
+
+1.4 Show the contents of the id array after each union operation when you use
+the quick-find algorithm (Program 1.1) to solve the connectivity problem for
+the sequence 0-2, 1-4, 2-5, 3-6, 0-4, 6-0, and 1-3. Also give the number of
+times the program accesses the id array for each input pair.
 */
 
 #include <iostream>
@@ -37,7 +38,7 @@ void quick_union(int ps[], int qs[], int m) {
 		for (j = q; j != id[j]; j = id[j])
 			times += 2;
 		if (i == j) {
-			cout << endl;
+			cout << " accesses = " << times << endl;
 			continue;
 		}
 		times++;
@@ -57,5 +58,5 @@ void quick_union(int ps[], int qs[], int m) {
 3-6 id array = 2 4 5 6 4 5 6 7 8 9 accesses = 3
 0-4 id array = 2 4 5 6 4 4 6 7 8 9 accesses = 7
 6-0 id array = 2 4 5 6 4 4 4 7 8 9 accesses = 9
-1-3
+1-3 accesses = 8
 */
