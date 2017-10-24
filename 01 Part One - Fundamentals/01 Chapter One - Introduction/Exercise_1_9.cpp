@@ -15,8 +15,8 @@ static const int N = 1024;
 int weighted_quick_union(int ps[], int qs[], int m);
 
 int main() {
-    random_device rd;
-    mt19937 random_number_engine(rd());
+	random_device rd;
+	mt19937 random_number_engine(rd());
 	uniform_int_distribution<> dis(0, N - 1);
 	
 	cout << "M = " << M << " N = " << N << endl;
