@@ -13,17 +13,17 @@ using namespace std;
 
 static const int N = 10;
 
-void weighted_quick_union_with_path_compression(int ps[], int qs[], int m);
+void weighted_quick_union_with_halving_path_compression(int ps[], int qs[], int m);
 
 int main() {
 	int ps[7] = {0, 1, 2, 3, 0, 6, 1};
 	int qs[7] = {2, 4, 5, 6, 4, 0, 3};
-	weighted_quick_union_with_path_compression(ps, qs, 7);
+	weighted_quick_union_with_halving_path_compression(ps, qs, 7);
 	
 	return 0;
 }
 
-void weighted_quick_union_with_path_compression(int ps[], int qs[], int m) {
+void weighted_quick_union_with_halving_path_compression(int ps[], int qs[], int m) {
 	int i, j, p, q, id[N], sz[N];
 	for (i = 0; i < N; i++) {
 		id[i] = i;
