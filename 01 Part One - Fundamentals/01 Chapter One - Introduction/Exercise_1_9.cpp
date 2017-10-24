@@ -25,10 +25,10 @@ int main() {
 	
 	int ps[M] = {};
 	int qs[M] = {};
-    for (int n = 0; n < M; n++) {
+	for (int n = 0; n < M; n++) {
 		ps[n] = dis(random_number_engine);
 		qs[n] = dis(random_number_engine);
-    }
+	}
 	int instructions = weighted_quick_union(ps, qs, M);
 	cout << "random input instructions = " << instructions << endl;
 	
