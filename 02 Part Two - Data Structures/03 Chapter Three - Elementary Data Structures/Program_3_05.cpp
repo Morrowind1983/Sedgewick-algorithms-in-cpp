@@ -19,6 +19,7 @@ require the array to be global if N is huge, or we could allocate it dynamically
 using namespace std;
 
 static const int N = 1000;
+
 int main() {
 	int i, a[N];
 	for (i = 2; i < N; i++) a[i] = 1;
@@ -28,4 +29,5 @@ int main() {
 	for (i = 2; i < N; i++)
 		if (a[i]) cout << " " << i;
 	cout << endl;
+	return 0;
 }
