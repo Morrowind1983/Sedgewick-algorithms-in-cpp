@@ -12,7 +12,6 @@ square or an adjacent one. The function malloc2d is like the one in Program
 
 #include <iostream>
 #include <cmath>
-//#include <cstdlib>
 #include <chrono>
 #include "Point.h"
 using namespace std;
