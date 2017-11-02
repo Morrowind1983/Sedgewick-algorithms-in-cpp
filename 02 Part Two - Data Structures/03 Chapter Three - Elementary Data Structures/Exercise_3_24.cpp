@@ -20,7 +20,6 @@ typedef node *link;
 
 link create_circular_list(int length);
 void release_circular_list(link p);
-int number_of_nodes(link p);
 
 int main() {
 	link first = create_circular_list(30);
