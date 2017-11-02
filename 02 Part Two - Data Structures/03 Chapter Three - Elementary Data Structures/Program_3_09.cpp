@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
 	link t = new node(1, 0);
 	t->next = t;
 	link x = t;
-	link c;
+	link c = NULL;
 	for (i = 2; i <= N; i++)
 		x = (x->next = new node(i, t));
 	while (x != x->next) {
