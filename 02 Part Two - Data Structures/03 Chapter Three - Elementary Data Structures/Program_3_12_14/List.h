@@ -16,17 +16,13 @@ typedef int Item;
 struct node { 
 	Item item;
 	node *next;
-	node (Item x, node* t) {
-		item = x;
-		next = t;
-	}
 };
 
 typedef node *link;
 typedef link Node;
 
 void construct(int);
-Node newNode(int);
+Node newNode(Item);
 void deleteNode(Node);
 void insert(Node, Node);
 Node remove(Node);
