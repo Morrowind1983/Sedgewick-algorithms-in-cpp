@@ -30,6 +30,7 @@ typedef node *link;
 link move_largest_to_end(link);
 link move_smallest_to_begin(link);
 link rearrange_odd_even(link);
+
 link create_random_list(int);
 void release_list(link&);
 void print_list(link);
@@ -37,12 +38,28 @@ void print_list(link);
 int main() {
 	link head = create_random_list(30);
 	print_list(head);
+	
 	move_largest_to_end(head);
 	print_list(head);
+	
 	move_smallest_to_begin(head);
 	print_list(head);
+	
 	rearrange_odd_even(head);
 	print_list(head);
+	
+	link t = head->next->next->next->next;
+	link u = head->next->next;
+	link tn = t->next;
+	link un = u->next;
+	link tnn = tn->next;
+	link unn = un->next;
+	tn->next = unn;
+	un->next = tnn;
+	t->next = un;
+	u->next = tn;
+	print_list(head);
+	
 	release_list(head);
 }
 
@@ -124,7 +141,7 @@ link rearrange_odd_even(link head) {
 link create_random_list(int length) {
 	link head = nullptr;
 	while (length != 0) {
-		head = new node(rand()%1000, head);
+		head = new node(rand() % 1000, head);
 		length--;
 	}
 	return new node(0, head);
