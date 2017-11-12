@@ -27,41 +27,42 @@ struct node {
 typedef node *link;
 typedef int (*filter)(link);
 
-link copy_list(link);
-void filter_list(link, filter);
-link new_filter_list(link, filter);
+node copy_list(link);
+void filter_list(node, filter);
+node new_filter_list(node, filter);
 int is_odd(link);
 int is_even(link);
 int is_under_100(link);
 	
-link create_random_list(int);
-void release_list(link&);
-void print_list(link);
+node create_random_list(int);
+void release_list(node);
+void print_list(node);
 
 int main() {
-	link head = create_random_list(30);
+	node head = create_random_list(30);
 	print_list(head);
 	
-	link new_head = copy_list(head);
-	print_list(new_head);
+	node copy_head = copy_list(head.next->next);
+	print_list(copy_head);
 	
 	filter_list(head, is_odd);
 	print_list(head);
 	
-	filter_list(new_head, is_even);
-	print_list(new_head);
+	filter_list(copy_head, is_even);
+	print_list(copy_head);
 	
-	link small_head = new_filter_list(head, is_under_100);
+	node small_head = new_filter_list(head, is_under_100);
 	print_list(small_head);
 	
 	release_list(head);
-	release_list(new_head);
+	release_list(copy_head);
 	release_list(small_head);
 }
 
-link copy_list(link p) {
+node copy_list(link p) {
+	node head = node(0, nullptr);
 	if (p == nullptr) {
-		return nullptr;
+		return head;
 	}
 	link x = p;
 	link copy_p = new node(x->item, nullptr);
@@ -70,11 +71,12 @@ link copy_list(link p) {
 		x = x->next;
 		t = (t->next = new node(x->item, nullptr));
 	}
-	return copy_p;
+	head.next = copy_p;
+	return head;
 }
 
-void filter_list(link head, filter f) {
-	link x = head;
+void filter_list(node head, filter f) {
+	link x = &head;
 	while (x->next != nullptr) {
 		if (f(x->next) != 0) {
 			link t = x->next;
@@ -88,13 +90,10 @@ void filter_list(link head, filter f) {
 	}
 }
 
-link new_filter_list(link head, filter f) {
-	if (head == nullptr) {
-		return nullptr;
-	}
-	link x = head->next;
-	link new_head = new node(0, nullptr);
-	link t = new_head;
+node new_filter_list(node head, filter f) {
+	link x = head.next;
+	node new_head = node(0, nullptr);
+	link t = &new_head;
 	while (x != nullptr) {
 		if (f(x) == 0) {
 			t->next = new node(x->item, nullptr);
@@ -126,39 +125,48 @@ int is_under_100(link p) {
 	return 1;
 }
 
-link create_random_list(int length) {
-	link head = nullptr;
+node create_random_list(int length) {
+	link x = nullptr;
 	while (length != 0) {
-		head = new node(rand() % 1000, head);
+		x = new node(rand() % 1000, x);
 		length--;
 	}
-	return new node(0, head);
+	return node(0, x);
 }
 
-void release_list(link& head) {
-	if (head == nullptr) {
-		return;
+void release_list(node head) {
+	link t = nullptr;
+	while (head.next != nullptr && head.next != &head) {
+		t = head.next;
+		head.next = t->next;
+		delete t;
+		t = nullptr;
 	}
-	link temp = nullptr;
-	while (head->next != nullptr && head->next != head) {
-		temp = head->next;
-		head->next = temp->next;
-		delete temp;
-		temp = nullptr;
-	}
-	delete head;
-	head = nullptr;
 }
 
-void print_list(link head) {
-	link x = head;
+void print_list(node head) {
+	link x = head.next;
+	cout << "(head)->";
 	while (x != nullptr) {
 		cout << x->item << "->";
 		x = x->next;
-		if (x == head) {
+		if (x == &head) {
 			cout << x->item << "(head)" << endl;
 			return;
 		}
 	}
 	cout << "(nullptr)" << endl;
 }
+
+/*
+(head)->335->816->278->99->933->560->157->709->169->303->612->840->729->327->5
+03->987->42->492->165->440->709->923->878->544->272->930->658->73->249->807->(
+nullptr)
+(head)->816->278->99->933->560->157->709->169->303->612->840->729->327->503->9
+87->42->492->165->440->709->923->878->544->272->930->658->73->249->807->(nullp
+tr)
+(head)->335->99->933->157->709->169->303->729->327->503->987->165->709->923->7
+3->249->807->(nullptr)
+(head)->816->278->560->612->840->42->492->440->878->544->272->930->658->(nullp
+tr) (head)->99->73->(nullptr)
+*/

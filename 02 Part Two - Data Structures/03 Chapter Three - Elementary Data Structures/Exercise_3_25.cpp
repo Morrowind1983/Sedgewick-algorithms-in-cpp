@@ -19,8 +19,8 @@ struct node {
 typedef node *link;
 
 link create_circular_list(int length);
-void release_circular_list(link p);
-void print_circular_list(link p);
+void release_circular_list(link&);
+void print_circular_list(link);
 
 int main() {
 	link first = create_circular_list(30);
@@ -35,15 +35,15 @@ int main() {
 	print_circular_list(first);
 
 	release_circular_list(first);
-	second = NULL;
-	temp = NULL;
+	second = nullptr;
+	temp = nullptr;
 }
 
 link create_circular_list(int length) {
 	if (length <= 0) {
-		return NULL;
+		return nullptr;
 	}
-	link first = new node(0, NULL);
+	link first = new node(0, nullptr);
 	first->next = first;
 	link x = first;
 	for (int i = 1; i < length; i++) {
@@ -52,30 +52,31 @@ link create_circular_list(int length) {
 	return first;
 }
 
-void release_circular_list(link p) {
-	link temp = NULL;
-	while (p->next != NULL && p->next != p) {
+void release_circular_list(link& p) {
+	link temp = nullptr;
+	while (p->next != nullptr && p->next != p) {
 		temp = p->next;
 		p->next = temp->next;
 		delete temp;
+		temp = nullptr;
 	}
 	delete p;
-	p = NULL;
+	p = nullptr;
 }
 
 void print_circular_list(link p) {
-	link head = p;
+	link start = p;
 	do {
 		cout << p->item << "->";
 		p = p->next;
-	} while (p != head);
-	cout << p->item << "(head)" << endl;
+	} while (p != start);
+	cout << p->item << "(start)" << endl;
 }
 
 /*
-0->1->2->3->4->3->4->5->6->7->8->9->10->11->12->13->14->15->16->17->18->19->20->
-21->22->23->24->25->26->27->28->29->30->31->32->33->34->35->36->37->38->39->40->
-41->42->43->44->45->46->47->48->49->50->51->52->53->54->55->56->57->58->59->0->1
-->2->5->6->7->8->9->10->11->12->13->14->15->16->17->18->19->20->21->22->23->24->
-25->26->27->28->29->0(head)
+0->1->2->3->4->3->4->5->6->7->8->9->10->11->12->13->14->15->16->17->18->19->20-
+>21->22->23->24->25->26->27->28->29->30->31->32->33->34->35->36->37->38->39->40
+->41->42->43->44->45->46->47->48->49->50->51->52->53->54->55->56->57->58->59->0
+->1->2->5->6->7->8->9->10->11->12->13->14->15->16->17->18->19->20->21->22->23->
+24->25->26->27->28->29->0(start)
 */

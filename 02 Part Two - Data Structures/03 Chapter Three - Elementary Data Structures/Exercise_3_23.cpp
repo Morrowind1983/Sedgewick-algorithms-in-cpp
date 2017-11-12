@@ -18,8 +18,8 @@ struct node {
 typedef node *link;
 
 link create_circular_list(int length);
-void release_circular_list(link p);
-int number_of_nodes(link p);
+void release_circular_list(link&);
+int number_of_nodes(link);
 
 int main() {
 	link first = create_circular_list(30);
@@ -29,9 +29,9 @@ int main() {
 
 link create_circular_list(int length) {
 	if (length <= 0) {
-		return NULL;
+		return nullptr;
 	}
-	link first = new node(0, NULL);
+	link first = new node(0, nullptr);
 	first->next = first;
 	link x = first;
 	for (int i = 1; i < length; i++) {
@@ -40,15 +40,16 @@ link create_circular_list(int length) {
 	return first;
 }
 
-void release_circular_list(link p) {
-	link temp = NULL;
-	while (p->next != NULL && p->next != p) {
+void release_circular_list(link& p) {
+	link temp = nullptr;
+	while (p->next != nullptr && p->next != p) {
 		temp = p->next;
 		p->next = temp->next;
 		delete temp;
+		temp = nullptr;
 	}
 	delete p;
-	p = NULL;
+	p = nullptr;
 }
 
 int number_of_nodes(link p) {
@@ -57,7 +58,7 @@ int number_of_nodes(link p) {
 	do {
 		temp = temp->next;
 		cnt++;
-	} while (!(temp == p || temp == NULL));
+	} while (!(temp == p || temp == nullptr));
 	return cnt;
 }
 

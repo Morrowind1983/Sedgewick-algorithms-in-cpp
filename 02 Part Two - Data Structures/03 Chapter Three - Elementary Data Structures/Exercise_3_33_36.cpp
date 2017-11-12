@@ -27,29 +27,29 @@ struct node {
 
 typedef node *link;
 
-link move_largest_to_end(link);
-link move_smallest_to_begin(link);
-link rearrange_odd_even(link);
+node move_largest_to_end(node);
+node move_smallest_to_begin(node);
+node rearrange_odd_even(node);
 
-link create_random_list(int);
-void release_list(link&);
-void print_list(link);
+node create_random_list(int);
+void release_list(node);
+void print_list(node);
 
 int main() {
-	link head = create_random_list(30);
+	node head = create_random_list(30);
 	print_list(head);
 	
-	move_largest_to_end(head);
+	head = move_largest_to_end(head);
 	print_list(head);
 	
-	move_smallest_to_begin(head);
+	head = move_smallest_to_begin(head);
 	print_list(head);
 	
-	rearrange_odd_even(head);
+	head = rearrange_odd_even(head);
 	print_list(head);
 	
-	link t = head->next->next->next->next;
-	link u = head->next->next;
+	link t = head.next->next->next->next;
+	link u = head.next->next;
 	link tn = t->next;
 	link un = u->next;
 	link tnn = tn->next;
@@ -63,9 +63,9 @@ int main() {
 	release_list(head);
 }
 
-link move_largest_to_end(link head) {
-	link x = head;
-	if (x == nullptr || x->next == nullptr) {
+node move_largest_to_end(node head) {
+	link x = &head;
+	if (x->next == nullptr) {
 		return head;
 	}
 	link largest_link_pre = x;
@@ -85,9 +85,9 @@ link move_largest_to_end(link head) {
 	return head;
 }
 
-link move_smallest_to_begin(link head) {
-	link x = head;
-	if (x == nullptr || x->next == nullptr) {
+node move_smallest_to_begin(node head) {
+	link x = &head;
+	if (x->next == nullptr) {
 		return head;
 	}
 	link smallest_link_pre = x;
@@ -101,17 +101,14 @@ link move_smallest_to_begin(link head) {
 		x = x->next;
 	}
 	link t = smallest_link_pre->next->next;
-	smallest_link_pre->next->next = head->next->next;
-	head->next = smallest_link_pre->next;
+	smallest_link_pre->next->next = head.next;
+	head.next = smallest_link_pre->next;
 	smallest_link_pre->next = t;
 	return head;
 }
 
-link rearrange_odd_even(link head) {
-	if (head == nullptr) {
-		return head;
-	}
-	link odd_head = head->next;
+node rearrange_odd_even(node head) {
+	link odd_head = head.next;
 	if (odd_head == nullptr) {
 		return head;
 	}
@@ -138,39 +135,53 @@ link rearrange_odd_even(link head) {
 	return head;
 }
 
-link create_random_list(int length) {
-	link head = nullptr;
+node create_random_list(int length) {
+	link x = nullptr;
 	while (length != 0) {
-		head = new node(rand() % 1000, head);
+		x = new node(rand() % 1000, x);
 		length--;
 	}
-	return new node(0, head);
+	return node(0, x);
 }
 
-void release_list(link& head) {
-	if (head == nullptr) {
-		return;
+void release_list(node head) {
+	link t = nullptr;
+	while (head.next != nullptr && head.next != &head) {
+		t = head.next;
+		head.next = t->next;
+		delete t;
+		t = nullptr;
 	}
-	link temp = nullptr;
-	while (head->next != nullptr && head->next != head) {
-		temp = head->next;
-		head->next = temp->next;
-		delete temp;
-		temp = nullptr;
-	}
-	delete head;
-	head = nullptr;
 }
 
-void print_list(link head) {
-	link x = head;
+void print_list(node head) {
+	link x = head.next;
+	cout << "(head)->";
 	while (x != nullptr) {
 		cout << x->item << "->";
 		x = x->next;
-		if (x == head) {
+		if (x == &head) {
 			cout << x->item << "(head)" << endl;
 			return;
 		}
 	}
 	cout << "(nullptr)" << endl;
 }
+
+/*
+(head)->335->816->278->99->933->560->157->709->169->303->612->840->729->327->5
+03->987->42->492->165->440->709->923->878->544->272->930->658->73->249->807->(
+nullptr)
+(head)->335->816->278->99->933->560->157->709->169->303->612->840->729->327->5
+03->42->492->165->440->709->923->878->544->272->930->658->73->249->807->987->(
+nullptr)
+(head)->42->335->816->278->99->933->560->157->709->169->303->612->840->729->32
+7->503->492->165->440->709->923->878->544->272->930->658->73->249->807->987->(
+nullptr)
+(head)->42->816->99->560->709->303->840->327->492->440->923->544->930->73->807
+->335->278->933->157->169->612->729->503->165->709->878->272->658->249->987->(
+nullptr)
+(head)->42->816->709->560->99->303->840->327->492->440->923->544->930->73->807
+->335->278->933->157->169->612->729->503->165->709->878->272->658->249->987->(
+nullptr)
+*/

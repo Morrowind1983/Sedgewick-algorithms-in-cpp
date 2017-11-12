@@ -10,66 +10,87 @@ struct node {
 	int item;
 	node* prev;
 	node* next;
-	node(int x, node* t) {
+	node(int x, node* p, node* n) {
 		item = x;
-		next = t;
+		prev = p;
+		next = n;
 	}
 };
 
 typedef node *link;
 
 void exchange(link, link);
-link create_random_list(int);
-void release_list(link&);
-void print_list(link);
+node create_random_doubly_linked_list(int);
+void release_list(node);
+void print_doubly_linked_list(node);
 
 int main() {
-	link head = create_random_list(30);
-	print_list(head);
+	node head = create_random_doubly_linked_list(30);
+	print_doubly_linked_list(head);
 	
-	// exchange(head);
-	print_list(head);
+	exchange(head.next->next, head.next->next->next->next);
+	print_doubly_linked_list(head);
 	
 	release_list(head);
 }
 
 void exchange(link a, link b) {
-	
+	link ap = a->prev;
+	link an = a->next;
+	link bp = b->prev;
+	link bn = b->next;
+	a->prev = bp;
+	a->next = bn;
+	b->prev = ap;
+	b->next = an;
+	ap->next = b;
+	an->prev = b;
+	bp->next = a;
+	bn->prev = a;
 }
 
-link create_random_list(int length) {
-	link head = nullptr;
+node create_random_doubly_linked_list(int length) {
+	node head = node(0, nullptr, nullptr);
+	link x = nullptr;
+	link p = &head;
 	while (length != 0) {
-		head = new node(rand() % 1000, head);
+		x = new node(rand() % 1000, p, nullptr);
+		p->next = x;
+		p = x;
 		length--;
 	}
-	return new node(0, head);
+	return head;
 }
 
-void release_list(link& head) {
-	if (head == nullptr) {
-		return;
+void release_list(node head) {
+	link t = nullptr;
+	while (head.next != nullptr && head.next != &head) {
+		t = head.next;
+		head.next = t->next;
+		delete t;
+		t = nullptr;
 	}
-	link temp = nullptr;
-	while (head->next != nullptr && head->next != head) {
-		temp = head->next;
-		head->next = temp->next;
-		delete temp;
-		temp = nullptr;
-	}
-	delete head;
-	head = nullptr;
 }
 
-void print_list(link head) {
-	link x = head;
+void print_doubly_linked_list(node head) {
+	link x = head.next;
+	cout << "(head)<=>";
 	while (x != nullptr) {
-		cout << x->item << "->";
+		cout << x->item << "<=>";
 		x = x->next;
-		if (x == head) {
+		if (x == &head) {
 			cout << x->item << "(head)" << endl;
 			return;
 		}
 	}
 	cout << "(nullptr)" << endl;
 }
+
+/*
+(head)<=>807<=>249<=>73<=>658<=>930<=>272<=>544<=>878<=>923<=>709<=>440<=>165<=
+>492<=>42<=>987<=>503<=>327<=>729<=>840<=>612<=>303<=>169<=>709<=>157<=>560<=>9
+33<=>99<=>278<=>816<=>335<=>(nullptr)
+(head)<=>807<=>658<=>73<=>249<=>930<=>272<=>544<=>878<=>923<=>709<=>440<=>165<=
+>492<=>42<=>987<=>503<=>327<=>729<=>840<=>612<=>303<=>169<=>709<=>157<=>560<=>9
+33<=>99<=>278<=>816<=>335<=>(nullptr)
+*/
