@@ -1,9 +1,10 @@
 /*
-Program 3.13. List allocation for the Josephus problem
+3.49 Implement the interface in Program 3.12 using new and delete directly in
+newNode and deleteNode, respectively.
 
-This program for the Josephus problem is an example of a client program
-utilizing the list-processing primitives declared in Program 3.12 and
-implemented in Program 3.14.
+3.50 Run empirical studies comparing the running times of the memory-allocation
+functions in Program 3.14 with new and delete (see Exercise 3.49) for Program
+3.13 with M = 2 and N = 10^3, 10^4, 10^5, and 10^6.
 */
 
 #include <iostream>
@@ -38,8 +39,8 @@ int main(int argc, char *argv[]) {
 }
 
 /*
-977 N = 1000 M = 2 0.000126378 seconds.
-3617 N = 10000 M = 2 0.000464187 seconds.
-68929 N = 100000 M = 2 0.00369686 seconds.
-951425 N = 1000000 M = 2 0.0480642 seconds.
+977 N = 1000 M = 2 0.000473143 seconds.
+3617 N = 10000 M = 2 0.00182667 seconds.
+68929 N = 100000 M = 2 0.0191912 seconds.
+951425 N = 1000000 M = 2 0.215506 seconds.
 */
