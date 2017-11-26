@@ -44,9 +44,9 @@ CrossList malloc_crosslist_matrix(int **a, int row, int col) {
 	head.mu = row;
 	head.nu = col;
 	head.tu = 0;
-	head.rhead = new OLink[row];
-	head.chead = new OLink[col];
-	OLink* y = new OLink[col];
+	head.rhead = new OLink[head.mu + 1];
+	head.chead = new OLink[head.nu + 1];
+	OLink* y = new OLink[head.nu + 1];
 	for (int c = 1; c <= head.nu; c++) {
 		head.chead[c] = nullptr;
 		y[c] = head.chead[c];
@@ -72,15 +72,15 @@ CrossList malloc_crosslist_matrix(int **a, int row, int col) {
 					x->right = t;
 					x = t;
 				}
-				// if (head.chead[c] == nullptr) {
-				// 	head.chead[c] = x;
-				// 	head.chead[c]->down = head.chead[c];
-				// 	y[c] = head.chead[c];
-				// }
-				// else {
-				// 	y[c]->down = x;
-				// 	y[c] = x;
-				// }
+				if (head.chead[c] == nullptr) {
+					head.chead[c] = x;
+					head.chead[c]->down = head.chead[c];
+					y[c] = head.chead[c];
+				}
+				else {
+					y[c]->down = x;
+					y[c] = x;
+				}
 				head.tu++;
 			}
 		}
@@ -133,6 +133,29 @@ void print_crosslist_matrix(CrossList head) {
 		}
 		cout << endl;
 	}
+	
+	cout << endl;
+	
+	for (int c = 1; c <= head.nu; c++) {
+		int pre = 1;
+		OLink x = head.chead[c];
+		if (x != nullptr) {
+			do  {
+				while (pre < x->j) {
+					cout << " 0 ";
+					pre++;
+				}
+				pre++;
+				cout << setw(2) << x->e << " ";
+				x = x->down;
+			} while (x != head.chead[c]);
+		}
+		while (pre <= head.mu) {
+			cout << " 0 ";
+			pre++;
+		}
+		cout << endl;
+	}
 }
 
 void create_sparse_matrix(int **a, int row, int col) {
@@ -171,3 +194,48 @@ void release2d(int** matrix, int row) {
 	}
 	delete[] matrix;
 }
+
+/*
+ 0  0  0  0 72  0  0  0  0 65  0  0  0  0  0  0 12  0  0  0 
+ 0 33  0  0  0  0  0  0  0  0 33  0  0  0  0  0  0  0  0  0 
+ 0  0  0  0  0  0  0  0  0  0 24  0  3  0  0  0  0  0  0  0 
+ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 
+ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 
+ 0  0  0  0  0  0  0  0  0  0  0  0  0 57  0  0  0  0  0  6 
+ 0  0  0  0  0  0  0  0  0  0  0 31  0  0  0 40  0  0  0  0 
+ 0  0  0  0  0  0  5  0  0  0  0 38  0 44  0  0  0  0  0  0 
+ 0 50  0  0  0  0  0  0  0  0  0  0  0  0 44  0  0  0  0  0 
+ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 62  0  0 
+
+ 0  0  0  0 72  0  0  0  0 65  0  0  0  0  0  0 12  0  0  0 
+ 0 33  0  0  0  0  0  0  0  0 33  0  0  0  0  0  0  0  0  0 
+ 0  0  0  0  0  0  0  0  0  0 24  0  3  0  0  0  0  0  0  0 
+ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 
+ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 
+ 0  0  0  0  0  0  0  0  0  0  0  0  0 57  0  0  0  0  0  6 
+ 0  0  0  0  0  0  0  0  0  0  0 31  0  0  0 40  0  0  0  0 
+ 0  0  0  0  0  0  5  0  0  0  0 38  0 44  0  0  0  0  0  0 
+ 0 50  0  0  0  0  0  0  0  0  0  0  0  0 44  0  0  0  0  0 
+ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 62  0  0 
+
+ 0  0  0  0  0  0  0  0  0  0 
+ 0 33  0  0  0  0  0  0 50  0 
+ 0  0  0  0  0  0  0  0  0  0 
+ 0  0  0  0  0  0  0  0  0  0 
+72  0  0  0  0  0  0  0  0  0 
+ 0  0  0  0  0  0  0  0  0  0 
+ 0  0  0  0  0  0  0  5  0  0 
+ 0  0  0  0  0  0  0  0  0  0 
+ 0  0  0  0  0  0  0  0  0  0 
+65  0  0  0  0  0  0  0  0  0 
+ 0 33 24  0  0  0  0  0  0  0 
+ 0  0  0  0  0  0 31 38  0  0 
+ 0  0  3  0  0  0  0  0  0  0 
+ 0  0  0  0  0 57  0 44  0  0 
+ 0  0  0  0  0  0  0  0 44  0 
+ 0  0  0  0  0  0 40  0  0  0 
+12  0  0  0  0  0  0  0  0  0 
+ 0  0  0  0  0  0  0  0  0 62 
+ 0  0  0  0  0  0  0  0  0  0 
+ 0  0  0  0  0  6  0  0  0  0 
+*/
