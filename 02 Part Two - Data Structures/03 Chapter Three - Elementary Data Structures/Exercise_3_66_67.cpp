@@ -1,6 +1,9 @@
 /*
 3.66 Write a program to convert a sparse matrix from a two-dimensional array
 to a multilist with nodes for only nonzero values.
+
+3.67 Implement matrix multiplication for matrices represented with
+multi-lists.
 */
 
 #include <iostream>
@@ -18,6 +21,8 @@ typedef struct {
 	int mu, nu, tu;
 } CrossList;
 
+CrossList crosslist_matrix_multiplication(CrossList A, CrossList B);
+ELemType productAtPos(CrossList headA, CrossList headB, int row, int col);
 CrossList malloc_crosslist_matrix(int **a, int row, int col);
 void release_crosslist_matrix(CrossList head);
 void print_crosslist_matrix(CrossList head);
@@ -27,16 +32,103 @@ int** malloc2d(int row, int col);
 void release2d(int** matrix, int row);
 
 int main() {
-	int **matrix = malloc2d(10, 20);
-	create_sparse_matrix(matrix, 10, 20);
-	print_matrix(matrix, 10, 20);
+	int **matrixA = malloc2d(10, 20);
+	create_sparse_matrix(matrixA, 10, 20);
+	print_matrix(matrixA, 10, 20);
 	cout << endl;
-	CrossList head = malloc_crosslist_matrix(matrix, 10, 20);
-	print_crosslist_matrix(head);
-	release_crosslist_matrix(head);
-	release2d(matrix, 10);
+	CrossList headA = malloc_crosslist_matrix(matrixA, 10, 20);
+	print_crosslist_matrix(headA);
+	cout << endl;
+	
+	int **matrixB = malloc2d(20, 10);
+	create_sparse_matrix(matrixB, 20, 10);
+	print_matrix(matrixB, 20, 10);
+	cout << endl;
+	CrossList headB = malloc_crosslist_matrix(matrixB, 20, 10);
+	print_crosslist_matrix(headB);
+	cout << endl;
+	
+	CrossList headAB = crosslist_matrix_multiplication(headA, headB);
+	print_crosslist_matrix(headAB);
+	
+	release_crosslist_matrix(headA);
+	release_crosslist_matrix(headB);
+	release_crosslist_matrix(headAB);
+	release2d(matrixA, 10);
+	release2d(matrixB, 10);
 
 	return 0;
+}
+
+CrossList crosslist_matrix_multiplication(CrossList headA, CrossList headB) {
+	CrossList head;
+	if (headA.nu != headB.mu) {
+		head.mu = 0;
+		head.nu = 0;
+		head.tu = 0;
+		head.rhead = nullptr;
+		head.chead = nullptr;
+		return head;
+	}
+	head.mu = headA.mu;
+	head.nu = headB.nu;
+	head.tu = 0;
+	head.rhead = new OLink[head.mu + 1];
+	head.chead = new OLink[head.nu + 1];
+	OLink* y = new OLink[head.nu + 1];
+	for (int c = 1; c <= head.nu; c++) {
+		head.chead[c] = nullptr;
+		y[c] = head.chead[c];
+	}
+	OLink x = nullptr;
+	for (int r = 1; r <= head.mu; r++) {
+		head.rhead[r] = nullptr;
+		x = head.rhead[r];
+		for (int c = 1; c <= head.nu; c++) {
+			ELemType e = productAtPos(headA, headB, r, c);
+			if (e != 0) {
+				OLink t = new OLNode;
+				t->e = e;
+				t->i = c;
+				t->j = r;
+				t->right = head.rhead[r];
+				t->down = head.chead[c];
+				if (head.rhead[r] == nullptr) {
+					head.rhead[r] = t;
+					head.rhead[r]->right = head.rhead[r];
+					x = head.rhead[r];
+				}
+				else {
+					x->right = t;
+					x = t;
+				}
+				if (head.chead[c] == nullptr) {
+					head.chead[c] = x;
+					head.chead[c]->down = head.chead[c];
+					y[c] = head.chead[c];
+				}
+				else {
+					y[c]->down = x;
+					y[c] = x;
+				}
+				head.tu++;
+			}
+		}
+	}
+	delete[] y;
+	
+	return head;
+}
+
+ELemType productAtPos(CrossList headA, CrossList headB, int row, int col) {
+	int len = headA.nu;
+	ELemType e = 0;
+	OLink x = nullptr;
+	OLink y = nullptr;
+	for (int i = 1; i <= len; i++) {
+		
+	}
+	return e;
 }
 
 CrossList malloc_crosslist_matrix(int **a, int row, int col) {
