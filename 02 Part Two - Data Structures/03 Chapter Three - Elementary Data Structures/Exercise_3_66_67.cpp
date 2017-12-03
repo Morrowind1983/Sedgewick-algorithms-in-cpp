@@ -55,7 +55,7 @@ int main() {
 	release_crosslist_matrix(headB);
 	release_crosslist_matrix(headAB);
 	release2d(matrixA, 10);
-	release2d(matrixB, 10);
+	release2d(matrixB, 20);
 
 	return 0;
 }
