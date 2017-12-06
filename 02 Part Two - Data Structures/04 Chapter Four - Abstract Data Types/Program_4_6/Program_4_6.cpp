@@ -15,7 +15,7 @@ using namespace std;
 int main(int argc, char *argv[]) { 
 	char *a = argv[1];
 	int N = strlen(a);
-	Stack<char> ops(N);
+	Stack<char> ops;
 	for (int i = 0; i < N; i++) {
 		if (a[i] == ')') {
 			cout << ops.pop() << " ";
