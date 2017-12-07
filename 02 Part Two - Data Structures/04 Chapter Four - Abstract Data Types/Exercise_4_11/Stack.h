@@ -31,4 +31,5 @@ public:
 	bool empty() const;
 	void push(Item item);
 	Item pop();
+	Item top();
 };

@@ -36,3 +36,11 @@ Item Stack<Item>::pop() {
 	}
 	return 0;
 }
+
+template <class Item>
+Item Stack<Item>::top() {
+	if (!empty()) {
+		return head->item;
+	}
+	return 0;
+}
