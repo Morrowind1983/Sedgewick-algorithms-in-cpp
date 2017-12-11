@@ -45,6 +45,22 @@ Item value_of_postfix_expression(string str) {
 	int len = str.length();
 	Stack<Item> stack;
 	for (int i = 0; i < len; i++) {
+		if ((str[i] >= '0' && str[i] <= '9') || str[i] == '.' 
+		|| str[i] == '-') {
+			string num = "";
+			if (str[i] == '-') {
+				num = "-";
+				i++;
+			}
+			while ((str[i] >= '0' && str[i] <= '9') || str[i] == '.') {
+				num = num + str[i++];
+			}
+			i--;
+			if (num != "-") {
+				stack.push(stringToNum<Item>(num));
+			}
+		}
+		
 		if (str[i] == '+') {
 			stack.push(stack.pop() + stack.pop());
 		}
@@ -61,58 +77,90 @@ Item value_of_postfix_expression(string str) {
 			Item x = stack.pop();
 			stack.push(x/y);
 		}
+		else if (str[i] == '^') {
+			Item y = stack.pop();
+			Item x = stack.pop();
+			stack.push(pow(x, y));
+		}
 		else if (str[i] == '$') {
 			stack.push(sqrt(stack.pop()));
-		}
-		else if (str[i] == '_') {
-			stack.push(-stack.pop());
-		}
-		else if ((str[i] >= '0' && str[i] <= '9') || str[i] == '.') {
-			string num = "";
-			while ((str[i] >= '0' && str[i] <= '9') || str[i] == '.') {
-				num = num + str[i++];
-			}
-			i--;
-			stack.push(stringToNum<Item>(num));
 		}
 	}
 	return stack.pop();
 }
 
 string infix_to_postfix_conversion(string str) {
-	string out = "";
+	int precedence[256] = {};
+	precedence['^'] = 4;
+	precedence['$'] = 4;
+	precedence['*'] = 3;
+	precedence['/'] = 3;
+	precedence['+'] = 2;
+	precedence['-'] = 2;
 	
+	string out = "";
+	string left = "(";
+	string right = ")";
+	str = left + str + right;
 	int len = str.length();
+	int flag = 0;
 	Stack<char> stack;
-	bool single = false;
 	for (int i = 0; i < len; i++) {
-		if (str[i] == '(') {
-			single = true;
-		}
-		else if (str[i] == ')') {
-			out = out + stack.pop() + " ";
-		}
-		else if (str[i] == '+' || str[i] == '*' 
-		|| str[i] == '/' || str[i] == '$') {
-			stack.push(str[i]);
-		}
-		else if (str[i] == '-') {
-			if (single) {
-				stack.push('_');
+		if ((str[i] >= '0' && str[i] <= '9') || str[i] == '.') {
+			if (flag == 2) {
+				out += stack.pop();
 			}
-			else {
-				stack.push(str[i]);
-			}
-		}
-		else if ((str[i] >= '0' && str[i] <= '9') || str[i] == '.') {
 			while ((str[i] >= '0' && str[i] <= '9') || str[i] == '.') {
 				out = out + str[i++];
 			}
 			i--;
 			out += " ";
-			single = false;
+			flag = 0;
+		}
+		else if (str[i] == '(') {
+			stack.push(str[i]);
+			flag = 1;
+		}
+		else if (str[i] == ')') {
+			while (true) {
+				char op = stack.pop();
+				if (op == '(') {
+					break;
+				}
+				out = out + op + " ";
+			}
+			flag = 0;
+		}
+		else if (str[i] == '+' || str[i] == '-' || str[i] == '*' 
+		|| str[i] == '/' || str[i] == '^' || str[i] == '$') {
+			while (true) {
+				if (stack.empty()) {
+					break;
+				}
+				char last_op = stack.top();
+				if (last_op == '(' 
+				|| precedence[str[i]] > precedence[last_op]) {
+					break;
+				}
+				else {
+					out = out + stack.pop() + " ";
+				}
+			}
+			stack.push(str[i]);
+			if (flag == 1) {
+				flag = 2;
+			}
+			else {
+				flag = 0;
+			}
 		}
 	}
 	
 	return out;
 }
+
+/*
+"(-(-1) + \$((-1) * (-1)-(4 * (-1))))/2"
+-1 - -1 -1 * 4 -1 * - $ + 2 / 
+1.61803
+*/
