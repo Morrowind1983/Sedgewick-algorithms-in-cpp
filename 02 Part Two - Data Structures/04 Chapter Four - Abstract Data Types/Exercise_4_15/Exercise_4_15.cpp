@@ -147,7 +147,7 @@ string infix_to_postfix_conversion(string str) {
 				}
 			}
 			stack.push(str[i]);
-			if (flag == 1) {
+			if (str[i] == '-' && flag == 1) {
 				flag = 2;
 			}
 			else {
