@@ -91,3 +91,13 @@ Item Deque<Item>::Front() const {
 	}
 	return array_[head_];
 }
+
+template <class Item>
+void Deque<Item>::Dump() {
+	int i = head_;
+	while (i != tail_) {
+		cout << array_[i++] << " ";
+		i = i % capacity_;
+	}
+	cout << endl;
+}

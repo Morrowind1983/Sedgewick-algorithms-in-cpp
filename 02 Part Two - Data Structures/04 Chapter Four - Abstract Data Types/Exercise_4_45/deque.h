@@ -1,29 +1,35 @@
-#ifndef QUEUE_H__
-#define QUEUE_H__
+#ifndef DEQUE_H__
+#define DEQUE_H__
 
 template <class Item>
-class Queue {
+class Deque {
 public:
-	Queue();
-	~Queue();
+	Deque();
+	~Deque();
 	
 	bool Empty() const;
-	void Put(Item);
-	Item Get();
+	void PushBack(Item);
+	void PushFront(Item);
+	Item PopBack();
+	Item PopFront();
+	Item Back() const;
+	Item Front() const;
+	void Dump();
 	
 private:
 	struct node {
 		Item item;
+		node* prev;
 		node* next;
-		node (Item x, node* t) {
+		node (Item x, node* p, node* t) {
 			item = x;
+			prev = p;
 			next = t;
 		}
 	};
 	node* head_;
 	node* tail_;
 	int size_;
-	void Error();
 };
 
-#endif // QUEUE_H__
+#endif // DEQUE_H__

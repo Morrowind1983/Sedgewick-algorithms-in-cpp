@@ -15,6 +15,7 @@ public:
 	Item PopFront();
 	Item Back() const;
 	Item Front() const;
+	void Dump();
 	
 private:
 	Item* array_;

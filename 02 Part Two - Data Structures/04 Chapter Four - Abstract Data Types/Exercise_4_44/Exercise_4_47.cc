@@ -4,6 +4,8 @@ first argument on the command line, a string of commands like those given in
 Exercise 4.40 then performing the indicated operations. Add a member function
 dump to the interface and implementations, and print out the contents of the
 deque after each operation, in the style of Figure 4.6.
+
+EAs+Y+QUE**+st+*+IO*n++*
 */
 
 #include "deque.cc"
@@ -23,14 +25,52 @@ int main() {
 	char c;
 	for (int i = 0; i < len; ++i) {
 		c = input[i];
-		if (c == '*') {
-			cout << deque.PopFront() << " ";
+		cout << c << "   ";
+		if (c == '+') {
+			cout <<  deque.PopFront() << "   ";
 		}
-		else {
+		else if (c == '*') {
+			cout <<  deque.PopBack() << "   ";
+		}
+		else if (c >= 'A' && c <= 'Z') {
+			deque.PushFront(c);
+			cout << "    ";
+		}
+		else if (c >= 'a' && c <= 'z') {
 			deque.PushBack(c);
+			cout << "    ";
 		}
+		deque.Dump();
 	}
 	cout << endl;
 	
 	return 0;
 }
+
+/*
+EAs+Y+QUE**+st+*+IO*n++*
+E       E 
+A       A E 
+s       A E s 
++   A   E s 
+Y       Y E s 
++   Y   E s 
+Q       Q E s 
+U       U Q E s 
+E       E U Q E s 
+*   s   E U Q E 
+*   E   E U Q 
++   E   U Q 
+s       U Q s 
+t       U Q s t 
++   U   Q s t 
+*   t   Q s 
++   Q   s 
+I       I s 
+O       O I s 
+*   s   O I 
+n       O I n 
++   O   I n 
++   I   n 
+*   n   
+*/
